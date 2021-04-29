@@ -17,7 +17,7 @@ fastify.get("/", (req, reply) => {
   return reply.sendFile("documentation.html");
 });
 
-fastify.listen(3000, (err) => {
+fastify.listen(process.env.PORT, (err) => {
   if (err) throw err;
   const port = fastify.server.address().port;
   console.log(`server listening on ${port}`);
