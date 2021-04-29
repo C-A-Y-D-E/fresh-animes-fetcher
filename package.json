@@ -1,0 +1,24 @@
+{
+  "name": "AnimeAPI",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "fastify": "^3.14.1",
+    "fastify-mongodb": "^2.0.1",
+    "fastify-plugin": "^3.0.0",
+    "fastify-static": "^4.0.1",
+    "mongoose": "^5.12.6",
+    "slug": "^4.0.3",
+    "x-ray-scraper": "^3.0.6"
+  }
+}
