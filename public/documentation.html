@@ -14,5 +14,23 @@
 
 <h1>Episode</h1>
 <p>just add /api/v1/anime/606f28a43b2b48000425ae2a/episode/<'number'><a href="/api/v1/anime/606f28a43b2b48000425ae2a/episode/1"> click here</a></p>
+
+<h1>User</h1>
+
+<h3>For signup</h3>
+<code>http://localhost:3000/user</code> send POST request here with fields
+<strong>
+  username,email,password,confirmPassword,name
+</strong>
+
+
+<h3>For Login</h3>
+<code>http://localhost:3000/login</code> send POST request here with fields
+<strong>
+  username,password
+</strong>
+
+<h3>for getting yourself</h3>
+<code>http://localhost:3000/user</code> send GET request with headers <strong>authorization:token</strong>
 </body>
 </html>
