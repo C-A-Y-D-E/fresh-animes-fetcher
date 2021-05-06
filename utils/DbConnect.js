@@ -6,6 +6,9 @@ async function dbConnector(fastify, options) {
     const url = process.env.MONGODB_URI;
     const db = await mongoose.connect(url, {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
     });
     console.log("Database is connected");
     fastify.decorate("mongo", db);
