@@ -92,7 +92,7 @@ exports.getAnimeEpisode = (fastify) => async (request, reply) => {
     request.params.episodeId
   }`;
 
-  const episodeLink = await x(
+  let episodeLink = await x(
     link,
     x(
       "#wrapper_bg > section > section.content_left > div:nth-child(1) > div.anime_video_body > div.anime_video_body_cate > div.favorites_book > ul > li.dowloads > a@href",
