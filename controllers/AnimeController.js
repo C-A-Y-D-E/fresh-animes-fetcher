@@ -46,11 +46,15 @@ exports.getAnimes = (fastify) => async (request, reply) => {
       data: null,
     });
   }
+  const page = request.query.page ? parseInt(request.query.page) : 1;
+  const limit = request.query.limit ? parseInt(request.query.limit) : 10;
+  const count = Math.ceil((await Anime.countDocuments(filter)) / limit);
 
   return reply.code(200).send({
     status: "success",
     total: docs.length,
-    page: request.query.page ? parseInt(request.query.page) : 1,
+    totalPage: count,
+    page,
     data: docs,
   });
 };
@@ -88,7 +92,9 @@ exports.getAnimeEpisode = (fastify) => async (request, reply) => {
     reply.notFound("Episode Not available");
   }
 
-  let link = `https://gogoanime.ai/${slug(anime.title)}-episode-${
+  const animeTitle = anime?.title.replace(".", " ");
+
+  let link = `https://gogoanime.ai/${slug(animeTitle)}-episode-${
     request.params.episodeId
   }`;
 
