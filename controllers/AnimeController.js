@@ -33,6 +33,10 @@ exports.getAnimes = (fastify) => async (request, reply) => {
     }
   }
 
+  if (request.query.released) {
+    filter.released = request.query.released;
+  }
+
   const features = new ApiFeatures(Anime.find(filter, {}), request.query)
     .search()
     .sort()
@@ -94,7 +98,7 @@ exports.getAnimeEpisode = (fastify) => async (request, reply) => {
 
   const animeTitle = anime?.title.replace(".", " ");
 
-  let link = `https://gogoanime.ai/${slug(animeTitle)}-episode-${
+  let link = `${process.env.GOGO_URI}${slug(animeTitle)}-episode-${
     request.params.episodeId
   }`;
 
@@ -123,5 +127,20 @@ exports.getAnimeEpisode = (fastify) => async (request, reply) => {
   return reply.code(200).send({
     status: "success",
     data: episodeLink,
+  });
+};
+
+exports.getAnimeGenres = async (request, reply) => {
+  const genres = await Anime.distinct("genre");
+  return reply.code(200).send({
+    status: "success",
+    data: genres,
+  });
+};
+exports.getAnimeReleases = async (request, reply) => {
+  const genres = await Anime.distinct("released");
+  return reply.code(200).send({
+    status: "success",
+    data: genres,
   });
 };

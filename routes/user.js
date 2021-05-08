@@ -10,6 +10,10 @@ async function routes(fastify, options) {
     });
   };
 
+  /**
+   * GET USER DATA
+   */
+
   fastify.get(
     "/user",
     {
@@ -23,6 +27,9 @@ async function routes(fastify, options) {
     }
   );
 
+  /**
+   * SIGNUP
+   */
   fastify.post("/user", async (request, reply) => {
     const { name, password, confirmPassword, email, username } = request.body;
     const user = await User.create({
@@ -35,6 +42,10 @@ async function routes(fastify, options) {
     createSendToken(user, reply);
   });
 
+  /**
+   * LOGIN
+   */
+
   fastify.post("/login", async (request, reply) => {
     const { username, password } = request.body;
 
@@ -46,6 +57,39 @@ async function routes(fastify, options) {
       reply.notFound("Invalid Username And Password");
     createSendToken(user, reply);
   });
+
+  /**
+   *
+   * Forgot Password
+   */
+
+  // fastify.post("/forgot-password", async (request, reply) => {
+  //   const { mailer } = fastify;
+  //   const { email } = request.body;
+  //   if (!email) reply.badRequest(`Please Enter ${data}`);
+
+  //   const user = await User.findOne({ email });
+  //   if (!user) reply.notFound(`No user with this email`);
+
+  //   mailer.sendMail(
+  //     {
+  //       to: email,
+  //       text: "hello world !",
+  //     },
+  //     (errors, info) => {
+  //       if (errors) {
+  //         fastify.log.error(errors);
+
+  //         reply.serviceUnavailable();
+  //       }
+
+  //       reply.code(200).send({
+  //         status: "ok",
+  //         message: "Email successfully sent",
+  //       });
+  //     }
+  //   );
+  // });
 }
 
 module.exports = routes;

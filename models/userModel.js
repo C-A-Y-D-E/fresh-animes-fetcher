@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { getAvatar } = require("js-avatar");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const userSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
@@ -49,5 +50,10 @@ userSchema.methods.checkPassword = async function (
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
+
+// userSchema.methods.generatePasswordReset = function () {
+//   this.resetPasswordToken = crypto.randomBytes(20).toString("hex");
+//   this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
+// };
 
 module.exports = User = mongoose.model("User", userSchema);
