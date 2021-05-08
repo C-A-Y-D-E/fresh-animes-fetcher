@@ -23,23 +23,7 @@ fastify.register(require("fastify-cookie"), {
 });
 fastify.register(require("./utils/DbConnect"));
 fastify.register(require("fastify-sensible"));
-fastify.register(require("fastify-mailer"), {
-  defaults: {
-    // set the default sender email address to jane.doe@example.tld
-    from: "notyetfamousprk@gmail.com",
-    // set the default email subject to 'default example'
-    subject: "Password Reset Anime Time",
-  },
-  transport: {
-    host: "smtp.mailtrap.io",
-    port: 2525,
-    secure: false, // use TLS
-    auth: {
-      user: "860a3196cf9003",
-      pass: "32fd07b8b14aee",
-    },
-  },
-});
+
 fastify.register(require("fastify-compress"));
 fastify.register(require("fastify-static"), {
   root: path.join(__dirname, "public"),
