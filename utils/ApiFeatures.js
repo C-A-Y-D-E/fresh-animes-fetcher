@@ -7,7 +7,10 @@ class ApiFeatures {
   search() {
     if (this.queryObj.search) {
       this.query = this.query.find({
-        title: { $regex: `${this.queryObj.search}`, $options: "i" },
+        $or: [
+          { title: { $regex: `${this.queryObj.search}`, $options: "i" } },
+          { otherName: { $regex: `${this.queryObj.search}`, $options: "i" } },
+        ],
       });
     }
     return this;

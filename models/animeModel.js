@@ -1,18 +1,21 @@
 const mongoose = require("mongoose");
-const AnimeSchema = mongoose.Schema(
+const animeSchema = mongoose.Schema(
   {
-    title: { type: String },
-    image: String,
-    slug: String,
+    title: String,
     type: String,
     summary: String,
-    totalEpisodes: Number,
-    genre: Array,
+    genre: [String],
     released: String,
     status: String,
-    otherName: String,
+    otherName: [String],
+    animeID: String,
+    totalEpisodes: Number,
+    image: String,
+    slug: String,
+    category: String,
+    episodes: [{ episodeNo: Number, link: String }],
   },
   { timestamps: true }
 );
 
-module.exports = Anime = mongoose.model("anime", AnimeSchema);
+module.exports = Anime = mongoose.model("anime", animeSchema);
