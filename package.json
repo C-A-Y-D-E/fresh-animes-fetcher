@@ -27,6 +27,7 @@
     "fastify-static": "^4.0.1",
     "js-avatar": "^1.0.0",
     "mongoose": "^5.12.6",
+    "node-fetch": "^2.6.1",
     "slug": "^4.0.3",
     "x-ray-scraper": "^3.0.6"
   }

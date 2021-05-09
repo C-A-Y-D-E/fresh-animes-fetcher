@@ -36,7 +36,7 @@ fastify.get("/", (req, reply) => {
   return reply.sendFile("documentation.html");
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8000;
 fastify.listen(port, "0.0.0.0", (err) => {
   if (err) throw err;
   const port = fastify.server.address().port;

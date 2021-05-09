@@ -1,5 +1,6 @@
 const slug = require("slug");
 const x = require("x-ray-scraper");
+const fetch = require("node-fetch");
 const Anime = require("../models/animeModel");
 const ApiFeatures = require("../utils/ApiFeatures");
 
@@ -18,8 +19,8 @@ exports.getAnimes = (fastify) => async (request, reply) => {
     filter.genre = { $all: genre };
   }
 
-  if (request.query.type) {
-    if (request.query.type === "popular") {
+  if (request.query.category) {
+    if (request.query.category === "popular") {
       const titles = await x(
         "https://myanimelist.net/topanime.php?type=bypopularity",
         ".ranking-list",
@@ -29,7 +30,7 @@ exports.getAnimes = (fastify) => async (request, reply) => {
 
       filter.title = { $in: titles };
     } else {
-      filter.type = { $regex: `${request.query.type}`, $options: "i" };
+      filter.category = { $regex: `${request.query.category}`, $options: "i" };
     }
   }
 
@@ -37,7 +38,10 @@ exports.getAnimes = (fastify) => async (request, reply) => {
     filter.released = request.query.released;
   }
 
-  const features = new ApiFeatures(Anime.find(filter, {}), request.query)
+  const features = new ApiFeatures(
+    Anime.find(filter, {}).select("-episodes"),
+    request.query
+  )
     .search()
     .sort()
     .fields()
@@ -90,37 +94,25 @@ exports.getAnime = (fastify) => async (request, reply) => {
 exports.getAnimeEpisode = (fastify) => async (request, reply) => {
   const anime = await Anime.findOne({
     _id: request.params.id,
-  });
+  }).lean();
 
-  if (parseInt(request.params.episodeId) > anime.totalEpisodes) {
+  if (!anime) reply.notFound("No Anime Found");
+  const episodeID = parseInt(request.params.episodeId);
+  if (episodeID > anime.totalEpisodes) {
     reply.notFound("Episode Not available");
   }
 
-  const animeTitle = anime?.title.replace(".", " ");
+  let link = `${process.env.GOGO_URI}${anime?.episodes[episodeID]?.link}`;
 
-  let link = `${process.env.GOGO_URI}${slug(animeTitle)}-episode-${
-    request.params.episodeId
-  }`;
-
-  let episodeLink = await x(
+  let url = await x(
     link,
-    x(
-      "#wrapper_bg > section > section.content_left > div:nth-child(1) > div.anime_video_body > div.anime_video_body_cate > div.favorites_book > ul > li.dowloads > a@href",
-      ["#main > div > div.content_c > div > div:nth-child(5) a@href"]
-    )
+    "#wrapper_bg > section > section.content_left > div:nth-child(1) > div.anime_video_body > div.anime_video_body_cate > div.favorites_book > ul > li.dowloads > a@href"
   );
+  const id = url.split("?")[1].split("&")[0].split("=")[1];
+  const res = await fetch(`${process.env.GOGO_PLAY}${id}`);
+  const episodeLink = await res.json();
 
-  if (episodeLink?.length === 0) {
-    episodeLink = await x(
-      `${link}-${request.params.episodeId}`,
-      x(
-        "#wrapper_bg > section > section.content_left > div:nth-child(1) > div.anime_video_body > div.anime_video_body_cate > div.favorites_book > ul > li.dowloads > a@href",
-        ["#main > div > div.content_c > div > div:nth-child(5) a@href"]
-      )
-    );
-  }
-
-  if (episodeLink?.length === 0) {
+  if (!episodeLink) {
     reply.notFound("Not available to find episode link");
   }
 
