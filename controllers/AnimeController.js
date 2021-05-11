@@ -95,21 +95,23 @@ exports.getAnimeEpisode = (fastify) => async (request, reply) => {
   const anime = await Anime.findOne({
     _id: request.params.id,
   }).lean();
-
+  console.log(anime);
   if (!anime) reply.notFound("No Anime Found");
-  const episodeID = parseInt(request.params.episodeId);
+  const episodeID = parseInt(request.params.episodeNo);
   if (episodeID > anime.totalEpisodes) {
     reply.notFound("Episode Not available");
   }
 
-  let link = `${process.env.GOGO_URI}${anime?.episodes[episodeID]?.link}`;
+  let link = `${process.env.GOGO_URI}${anime?.episodes[episodeID - 1]?.link}`;
 
   let url = await x(
     link,
     "#wrapper_bg > section > section.content_left > div:nth-child(1) > div.anime_video_body > div.anime_video_body_cate > div.favorites_book > ul > li.dowloads > a@href"
   );
   const id = url.split("?")[1].split("&")[0].split("=")[1];
+
   const res = await fetch(`${process.env.GOGO_PLAY}${id}`);
+
   const episodeLink = await res.json();
 
   if (!episodeLink) {
